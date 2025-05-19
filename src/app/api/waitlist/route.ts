@@ -116,25 +116,25 @@ export async function POST(request: Request) {
       }
 
       return NextResponse.json({ success: true });
-    } catch (sheetsError: any) {
+    } catch (sheetsError: unknown) {
       console.error("Google Sheets API error:", {
-        message: sheetsError?.message || 'Unknown error',
-        stack: sheetsError?.stack,
-        response: sheetsError?.response?.data || 'No response data',
-        code: sheetsError?.code,
-        status: sheetsError?.status,
-        errors: sheetsError?.errors
+        message: sheetsError instanceof Error ? sheetsError.message : 'Unknown error',
+        stack: sheetsError instanceof Error ? sheetsError.stack : 'N/A',
+        response: (sheetsError as any)?.response?.data || 'No response data',
+        code: (sheetsError as any)?.code,
+        status: (sheetsError as any)?.status,
+        errors: (sheetsError as any)?.errors
       });
       throw sheetsError;
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error processing waitlist submission:", {
-      message: error?.message || 'Unknown error',
-      stack: error?.stack,
-      response: error?.response?.data || 'No response data',
-      code: error?.code,
-      status: error?.status,
-      errors: error?.errors
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : 'N/A',
+      response: (error as any)?.response?.data || 'No response data',
+      code: (error as any)?.code,
+      status: (error as any)?.status,
+      errors: (error as any)?.errors
     });
     return NextResponse.json(
       { 
