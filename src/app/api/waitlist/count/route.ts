@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 
-// Initialize the Google Sheets API
-const sheets = google.sheets('v4');
-
 // Your Google Sheets credentials and configuration
 const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
 const WAITLIST_SHEET_RANGE = 'Waitlist!A:E';
@@ -37,15 +34,15 @@ export async function GET() {
 
     console.log('API: Created auth client');
 
-    const client = await auth.getClient();
+    // Initialize sheets with the auth client
     const sheets = google.sheets('v4');
+    sheets.context._options = { ...sheets.context._options, auth };
 
     // Get all values from the Waitlist sheet
     console.log('API: Fetching sheet data...');
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
       range: WAITLIST_SHEET_RANGE,
-      auth: client as any,
     });
 
     console.log('API: Sheet data received:', {
