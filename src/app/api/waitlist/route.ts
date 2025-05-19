@@ -56,40 +56,79 @@ export async function POST(request: Request) {
       private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
     };
 
+    console.log('API: Created credentials object');
+
     // Create a JWT client using the service account credentials
     const auth = new google.auth.GoogleAuth({
       credentials,
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
 
+    console.log('API: Created auth client');
+
     // Initialize sheets with the auth client
     const sheets = google.sheets('v4');
     sheets.context._options = { ...sheets.context._options, auth };
+
+    console.log('API: Initialized sheets client');
 
     // Prepare the data for Google Sheets
     const timestamp = new Date().toISOString();
     const values = [[timestamp, name, email, phone || '', reason]];
 
-    // Append the data to Google Sheets
-    const response = await sheets.spreadsheets.values.append({
+    console.log('API: Attempting to append data to sheet:', {
       spreadsheetId: SPREADSHEET_ID,
       range: WAITLIST_SHEET_RANGE,
-      valueInputOption: 'USER_ENTERED',
-      requestBody: { values },
+      rowCount: values.length
     });
 
-    if (!response.data) {
-      console.error("Google Sheets append error:", response);
-      throw new Error("Failed to save to spreadsheet");
-    }
+    try {
+      // Append the data to Google Sheets
+      const response = await sheets.spreadsheets.values.append({
+        spreadsheetId: SPREADSHEET_ID,
+        range: WAITLIST_SHEET_RANGE,
+        valueInputOption: 'USER_ENTERED',
+        requestBody: { values },
+      });
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Error processing waitlist submission:", error);
+      console.log('API: Sheets append response:', {
+        status: response.status,
+        statusText: response.statusText,
+        hasData: !!response.data
+      });
+
+      if (!response.data) {
+        console.error("Google Sheets append error:", response);
+        throw new Error("Failed to save to spreadsheet");
+      }
+
+      return NextResponse.json({ success: true });
+    } catch (sheetsError: any) {
+      console.error("Google Sheets API error:", {
+        message: sheetsError?.message || 'Unknown error',
+        stack: sheetsError?.stack,
+        response: sheetsError?.response?.data || 'No response data'
+      });
+      throw sheetsError;
+    }
+  } catch (error: any) {
+    console.error("Error processing waitlist submission:", {
+      message: error?.message || 'Unknown error',
+      stack: error?.stack,
+      response: error?.response?.data || 'No response data'
+    });
     return NextResponse.json(
       { 
         error: 'Failed to process submission',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
+        debug: {
+          hasClientEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
+          hasPrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
+          hasSheetId: !!process.env.GOOGLE_SHEET_ID,
+          clientEmailLength: process.env.GOOGLE_CLIENT_EMAIL?.length,
+          privateKeyLength: process.env.GOOGLE_PRIVATE_KEY?.length,
+          sheetIdLength: process.env.GOOGLE_SHEET_ID?.length,
+        }
       },
       { status: 500 }
     );
