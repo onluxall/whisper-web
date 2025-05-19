@@ -205,7 +205,11 @@ export default function Waitlist() {
                       placeholder="Phone number (optional)"
                       className="pl-10 w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-400 outline-none bg-white/50 dark:bg-black/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
                       {...register("phone", {
-                        pattern: { value: /^[+\d\s\-()]*$/, message: "Enter a valid phone number (e.g. +1 (555) 123-4567)" } })}
+                        pattern: {
+                          value: /^\+?[\d\s-()]+$/,
+                          message: "Enter a valid phone number",
+                        },
+                      })}
                       disabled={isSubmitting || submitted}
                     />
                     {errors.phone && (
