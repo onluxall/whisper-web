@@ -2,11 +2,14 @@ import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 
 // Your Google Sheets credentials and configuration
-const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
+// Removed: const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
 const WAITLIST_SHEET_RANGE = 'Waitlist!A:E'; // Using the new Waitlist sheet
 
 export async function POST(request: Request) {
   try {
+    // Define SPREADSHEET_ID inside the handler
+    const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
+
     console.log('API: Starting waitlist submission...');
     
     // Debug environment variables (without exposing sensitive data)
@@ -58,15 +61,15 @@ export async function POST(request: Request) {
       );
     }
 
-    // Create credentials object
-    const credentials = {
-      client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY,
-    };
-
-    console.log('API: Created credentials object with email:', credentials.client_email);
-
     try {
+      // Create credentials object inside the handler
+      const credentials = {
+        client_email: process.env.GOOGLE_CLIENT_EMAIL,
+        private_key: process.env.GOOGLE_PRIVATE_KEY,
+      };
+
+      console.log('API: Created credentials object with email:', credentials.client_email);
+
       // Create a JWT client using the service account credentials
       const auth = new google.auth.GoogleAuth({
         credentials,
