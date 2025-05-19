@@ -76,27 +76,33 @@ export default function Waitlist() {
   // Add a debug log for render
   console.log('Current signup count:', signupCount);
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+    setSuccess(false);
+
     try {
-      setError(null);
-      const response = await fetch('/api/waitlist', {
+      const formData = new FormData(e.currentTarget);
+      const response = await fetch('https://formspree.io/f/xpzvnqkz', {
         method: 'POST',
+        body: formData,
         headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+          'Accept': 'application/json'
+        }
       });
 
       if (!response.ok) {
         throw new Error('Failed to submit form');
       }
 
-      setSubmitted(true);
-      reset();
-      setTimeout(() => setSubmitted(false), 3500);
+      setSuccess(true);
+      e.currentTarget.reset();
     } catch (err) {
+      console.error('Error submitting form:', err);
       setError('Failed to submit form. Please try again.');
-      console.error('Form submission error:', err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -147,125 +153,75 @@ export default function Waitlist() {
                   )}
                 </div>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                  {/* Name Field */}
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 dark:group-focus-within:text-emerald-400 transition-colors">
-                      <FiUser className="h-5 w-5" />
-                    </div>
+                <form onSubmit={onSubmit} className="space-y-4">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                      Name *
+                    </label>
                     <input
                       type="text"
+                      id="name"
+                      name="name"
+                      required
+                      minLength={2}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                       placeholder="Your name"
-                      className="pl-10 w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-400 outline-none bg-white/50 dark:bg-black/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
-                      {...register("name", {
-                        required: "Name is required",
-                        minLength: {
-                          value: 2,
-                          message: "Name must be at least 2 characters",
-                        },
-                      })}
-                      disabled={isSubmitting || submitted}
                     />
-                    {errors.name && (
-                      <span className="text-red-500 dark:text-red-400 text-sm mt-1 block">{errors.name.message}</span>
-                    )}
                   </div>
 
-                  {/* Email Field */}
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 dark:group-focus-within:text-emerald-400 transition-colors">
-                      <FiMail className="h-5 w-5" />
-                    </div>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+                      Email *
+                    </label>
                     <input
                       type="email"
-                      placeholder="you@email.com"
-                      autoComplete="email"
-                      className="pl-10 w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-400 outline-none bg-white/50 dark:bg-black/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
-                      {...register("email", {
-                        required: "Email is required",
-                        pattern: {
-                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                          message: "Enter a valid email address",
-                        },
-                      })}
-                      disabled={isSubmitting || submitted}
+                      id="email"
+                      name="email"
+                      required
+                      pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                      placeholder="your.email@example.com"
                     />
-                    {errors.email && (
-                      <span className="text-red-500 dark:text-red-400 text-sm mt-1 block">{errors.email.message}</span>
-                    )}
                   </div>
 
-                  {/* Phone Field (Optional) */}
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 dark:group-focus-within:text-emerald-400 transition-colors">
-                      <FiPhone className="h-5 w-5" />
-                    </div>
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+                      Phone (optional)
+                    </label>
                     <input
                       type="tel"
-                      placeholder="Phone number (optional)"
-                      className="pl-10 w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-400 outline-none bg-white/50 dark:bg-black/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
-                      {...register("phone", {
-                        pattern: {
-                          value: /^\+?[\d\s-()]+$/,
-                          message: "Enter a valid phone number",
-                        },
-                      })}
-                      disabled={isSubmitting || submitted}
+                      id="phone"
+                      name="phone"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                      placeholder="Your phone number"
                     />
-                    {errors.phone && (
-                      <span className="text-red-500 dark:text-red-400 text-sm mt-1 block">{errors.phone.message}</span>
-                    )}
                   </div>
 
-                  {/* Reason Field */}
-                  <div className="relative group">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 dark:group-focus-within:text-emerald-400 transition-colors">
-                      <FiMessageSquare className="h-5 w-5" />
-                    </div>
-                    <select
-                      className="pl-10 w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-400 outline-none bg-white/50 dark:bg-black/50 text-gray-900 dark:text-white appearance-none transition-all duration-200"
-                      {...register("reason", {
-                        required: "Please select a reason",
-                      })}
-                      disabled={isSubmitting || submitted}
-                    >
-                      <option value="">Select your reason for interest</option>
-                      {reasons.map((reason) => (
-                        <option key={reason} value={reason}>
-                          {reason}
-                        </option>
-                      ))}
-                    </select>
-                    {errors.reason && (
-                      <span className="text-red-500 dark:text-red-400 text-sm mt-1 block">{errors.reason.message}</span>
-                    )}
+                  <div>
+                    <label htmlFor="reason" className="block text-sm font-medium text-gray-700">
+                      Why do you want to join? *
+                    </label>
+                    <textarea
+                      id="reason"
+                      name="reason"
+                      required
+                      minLength={10}
+                      rows={3}
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                      placeholder="Tell us why you're interested in joining Whisper Health"
+                    />
                   </div>
 
-                  {error && (
-                    <div className="text-red-500 dark:text-red-400 text-sm text-center bg-red-50 dark:bg-red-900/20 p-4 rounded-xl">
-                      {error}
-                    </div>
-                  )}
+                  <input type="hidden" name="_subject" value="New Waitlist Signup" />
+                  <input type="hidden" name="_captcha" value="false" />
 
-                  <motion.button
+                  <button
                     type="submit"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-blue-600 via-emerald-500 to-teal-600 dark:from-emerald-600 dark:via-teal-500 dark:to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
-                    disabled={isSubmitting || submitted}
+                    disabled={isSubmitting}
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {isSubmitting ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                        </svg>
-                        Submitting...
-                      </span>
-                    ) : (
-                      "Join Waitlist"
-                    )}
-                  </motion.button>
+                    {isSubmitting ? 'Submitting...' : 'Join Waitlist'}
+                  </button>
                 </form>
 
                 {submitted && (
