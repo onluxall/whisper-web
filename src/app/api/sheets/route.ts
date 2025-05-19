@@ -52,7 +52,6 @@ export async function GET() {
     // Fetch the data from Google Sheets
     console.log('Fetching data from range:', SHEET_RANGE);
     const response = await sheets.spreadsheets.values.get({
-      auth: client,
       spreadsheetId: SPREADSHEET_ID,
       range: SHEET_RANGE,
     });
