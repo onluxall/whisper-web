@@ -120,7 +120,11 @@ export default function Waitlist() {
         console.log('Form submitted successfully:', responseData);
         // Reset the form before updating state
         const form = e.currentTarget;
-        form.reset();
+        if (form) {
+          form.reset();
+        } else {
+          console.error('Form element is null, cannot reset.');
+        }
         setSuccess(true);
         
         // Refresh the count after successful submission
