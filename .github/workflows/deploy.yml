@@ -29,6 +29,8 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+      - name: Export static site
+        run: npm run export
       - name: Setup Pages
         uses: actions/configure-pages@v4
       - name: Upload artifact

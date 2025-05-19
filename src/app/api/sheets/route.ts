@@ -1,9 +1,6 @@
 import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
 
-// Initialize the Google Sheets API
-const sheets = google.sheets('v4');
-
 // Your Google Sheets credentials and configuration
 const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
 const SHEET_RANGE = 'Stats!A2:C2'; // Updated range for Development Progress and Target Launch
@@ -48,12 +45,14 @@ export async function GET() {
     });
 
     const client = await auth.getClient();
+    const sheets = google.sheets('v4');
 
     // Fetch the data from Google Sheets
     console.log('Fetching data from range:', SHEET_RANGE);
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
       range: SHEET_RANGE,
+      auth: client as any,
     });
 
     const rows = response.data.values;

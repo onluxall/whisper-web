@@ -38,12 +38,14 @@ export async function GET() {
     console.log('API: Created auth client');
 
     const client = await auth.getClient();
+    const sheets = google.sheets('v4');
 
     // Get all values from the Waitlist sheet
     console.log('API: Fetching sheet data...');
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
       range: WAITLIST_SHEET_RANGE,
+      auth: client as any,
     });
 
     console.log('API: Sheet data received:', {
