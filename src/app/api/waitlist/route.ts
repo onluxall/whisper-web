@@ -10,28 +10,28 @@ export async function POST(request: Request) {
     // Lazy load googleapis inside the handler
     const { google } = await import('googleapis');
 
-    // Define SPREADSHEET_ID inside the handler
-    const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
+    // Define SPREADSHEET_ID using lowercase env var name
+    const SPREADSHEET_ID = process.env.google_sheet_id; // Changed to lowercase
 
     console.log('API: Starting waitlist submission...');
     
     // Debug environment variables (without exposing sensitive data)
     console.log('API: Environment check:', {
-      hasClientEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
-      hasPrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
-      hasSheetId: !!process.env.GOOGLE_SHEET_ID,
-      clientEmailLength: process.env.GOOGLE_CLIENT_EMAIL?.length,
-      privateKeyLength: process.env.GOOGLE_PRIVATE_KEY?.length,
-      sheetIdLength: process.env.GOOGLE_SHEET_ID?.length,
-      sheetId: process.env.GOOGLE_SHEET_ID, // Log the actual sheet ID to verify it's correct
+      hasClientEmail: !!process.env.google_client_email, // Changed to lowercase
+      hasPrivateKey: !!process.env.google_private_key, // Changed to lowercase
+      hasSheetId: !!process.env.google_sheet_id, // Changed to lowercase
+      clientEmailLength: process.env.google_client_email?.length, // Changed to lowercase
+      privateKeyLength: process.env.google_private_key?.length, // Changed to lowercase
+      sheetIdLength: process.env.google_sheet_id?.length, // Changed to lowercase
+      sheetId: process.env.google_sheet_id, // Changed to lowercase
     });
 
     // Validate environment variables
-    if (!process.env.GOOGLE_CLIENT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY || !process.env.GOOGLE_SHEET_ID) {
+    if (!process.env.google_client_email || !process.env.google_private_key || !process.env.google_sheet_id) { // Changed to lowercase
       const missingVars = [];
-      if (!process.env.GOOGLE_CLIENT_EMAIL) missingVars.push('GOOGLE_CLIENT_EMAIL');
-      if (!process.env.GOOGLE_PRIVATE_KEY) missingVars.push('GOOGLE_PRIVATE_KEY');
-      if (!process.env.GOOGLE_SHEET_ID) missingVars.push('GOOGLE_SHEET_ID');
+      if (!process.env.google_client_email) missingVars.push('google_client_email'); // Changed to lowercase
+      if (!process.env.google_private_key) missingVars.push('google_private_key'); // Changed to lowercase
+      if (!process.env.google_sheet_id) missingVars.push('google_sheet_id'); // Changed to lowercase
       
       console.error('Missing required environment variables:', missingVars);
       return NextResponse.json(
@@ -67,8 +67,8 @@ export async function POST(request: Request) {
     try {
       // Create credentials object inside the handler
       const credentials = {
-        client_email: process.env.GOOGLE_CLIENT_EMAIL,
-        private_key: process.env.GOOGLE_PRIVATE_KEY,
+        client_email: process.env.google_client_email, // Changed to lowercase
+        private_key: process.env.google_private_key, // Changed to lowercase
       };
 
       console.log('API: Created credentials object with email:', credentials.client_email);
@@ -147,12 +147,12 @@ export async function POST(request: Request) {
         error: 'Failed to process submission',
         details: error instanceof Error ? error.message : 'Unknown error',
         debug: {
-          hasClientEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
-          hasPrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
-          hasSheetId: !!process.env.GOOGLE_SHEET_ID,
-          clientEmailLength: process.env.GOOGLE_CLIENT_EMAIL?.length,
-          privateKeyLength: process.env.GOOGLE_PRIVATE_KEY?.length,
-          sheetIdLength: process.env.GOOGLE_SHEET_ID?.length,
+          hasClientEmail: !!process.env.google_client_email, // Changed to lowercase
+          hasPrivateKey: !!process.env.google_private_key, // Changed to lowercase
+          hasSheetId: !!process.env.google_sheet_id, // Changed to lowercase
+          clientEmailLength: process.env.google_client_email?.length, // Changed to lowercase
+          privateKeyLength: process.env.google_private_key?.length, // Changed to lowercase
+          sheetIdLength: process.env.google_sheet_id?.length, // Changed to lowercase
         }
       },
       { status: 500 }

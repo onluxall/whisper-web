@@ -2,30 +2,30 @@ import { google } from 'googleapis';
 import { NextResponse } from 'next/server';
 
 // Your Google Sheets credentials and configuration
-const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
+const SPREADSHEET_ID = process.env.google_sheet_id;
 const SHEET_RANGE = 'Stats!A2:C2'; // Updated range for Development Progress and Target Launch
 
 export async function GET() {
   try {
     // Debug: Log all environment variables (without sensitive data)
     console.log('Environment check:', {
-      hasClientEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
-      hasPrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
-      hasSheetId: !!process.env.GOOGLE_SHEET_ID,
-      clientEmailLength: process.env.GOOGLE_CLIENT_EMAIL?.length,
-      privateKeyLength: process.env.GOOGLE_PRIVATE_KEY?.length,
-      sheetIdLength: process.env.GOOGLE_SHEET_ID?.length,
+      hasClientEmail: !!process.env.google_client_email,
+      hasPrivateKey: !!process.env.google_private_key,
+      hasSheetId: !!process.env.google_sheet_id,
+      clientEmailLength: process.env.google_client_email?.length,
+      privateKeyLength: process.env.google_private_key?.length,
+      sheetIdLength: process.env.google_sheet_id?.length,
     });
 
     // Validate environment variables
-    if (!process.env.GOOGLE_CLIENT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY || !process.env.GOOGLE_SHEET_ID) {
+    if (!process.env.google_client_email || !process.env.google_private_key || !process.env.google_sheet_id) {
       return NextResponse.json(
         { 
           error: 'Missing required environment variables',
           details: {
-            hasClientEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
-            hasPrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
-            hasSheetId: !!process.env.GOOGLE_SHEET_ID,
+            hasClientEmail: !!process.env.google_client_email,
+            hasPrivateKey: !!process.env.google_private_key,
+            hasSheetId: !!process.env.google_sheet_id,
           }
         },
         { status: 500 }
@@ -34,8 +34,8 @@ export async function GET() {
 
     // Create credentials object with minimal required fields
     const credentials = {
-      client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY,
+      client_email: process.env.google_client_email,
+      private_key: process.env.google_private_key,
     };
 
     // Create a JWT client using the service account credentials
@@ -94,9 +94,9 @@ export async function GET() {
         error: 'Failed to fetch sheet data', 
         details: error instanceof Error ? error.message : 'Unknown error',
         debug: {
-          hasClientEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
-          hasPrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
-          hasSheetId: !!process.env.GOOGLE_SHEET_ID,
+          hasClientEmail: !!process.env.google_client_email,
+          hasPrivateKey: !!process.env.google_private_key,
+          hasSheetId: !!process.env.google_sheet_id,
         }
       },
       { status: 500 }

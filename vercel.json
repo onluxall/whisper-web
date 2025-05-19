@@ -7,8 +7,8 @@
     }
   ],
   "env": {
-    "GOOGLE_CLIENT_EMAIL": "@google_client_email",
-    "GOOGLE_PRIVATE_KEY": "@google_private_key",
-    "GOOGLE_SHEET_ID": "@google_sheet_id"
+    "google_client_email": "@google_client_email",
+    "google_private_key": "@google_private_key",
+    "google_sheet_id": "@google_sheet_id"
   }
-} 
+}

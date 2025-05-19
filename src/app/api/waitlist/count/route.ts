@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 
 // Your Google Sheets credentials and configuration
-const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
+const SPREADSHEET_ID = process.env.google_sheet_id;
 const WAITLIST_SHEET_RANGE = 'Waitlist!A:E';
 
 export async function GET() {
@@ -11,16 +11,16 @@ export async function GET() {
     
     // Debug environment variables (without exposing sensitive data)
     console.log('API: Environment check:', {
-      hasClientEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
-      hasPrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
-      hasSheetId: !!process.env.GOOGLE_SHEET_ID,
-      clientEmailLength: process.env.GOOGLE_CLIENT_EMAIL?.length,
-      privateKeyLength: process.env.GOOGLE_PRIVATE_KEY?.length,
-      sheetIdLength: process.env.GOOGLE_SHEET_ID?.length,
+      hasClientEmail: !!process.env.google_client_email,
+      hasPrivateKey: !!process.env.google_private_key,
+      hasSheetId: !!process.env.google_sheet_id,
+      clientEmailLength: process.env.google_client_email?.length,
+      privateKeyLength: process.env.google_private_key?.length,
+      sheetIdLength: process.env.google_sheet_id?.length,
     });
     
     // Validate environment variables
-    if (!process.env.GOOGLE_CLIENT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY || !process.env.GOOGLE_SHEET_ID) {
+    if (!process.env.google_client_email || !process.env.google_private_key || !process.env.google_sheet_id) {
       console.error('API: Missing required environment variables');
       return NextResponse.json(
         { error: 'Server configuration error' },
@@ -32,8 +32,8 @@ export async function GET() {
 
     // Create credentials object
     const credentials = {
-      client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY,
+      client_email: process.env.google_client_email,
+      private_key: process.env.google_private_key,
     };
 
     // Create a JWT client using the service account credentials
