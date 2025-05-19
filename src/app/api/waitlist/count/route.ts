@@ -42,7 +42,6 @@ export async function GET() {
     // Get all values from the Waitlist sheet
     console.log('API: Fetching sheet data...');
     const response = await sheets.spreadsheets.values.get({
-      auth: client,
       spreadsheetId: SPREADSHEET_ID,
       range: WAITLIST_SHEET_RANGE,
     });
