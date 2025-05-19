@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { google } from 'googleapis';
+// Removed: import { google } from 'googleapis'; // Lazy load instead
 
 // Your Google Sheets credentials and configuration
 // Removed: const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
@@ -7,6 +7,9 @@ const WAITLIST_SHEET_RANGE = 'Waitlist!A:E'; // Using the new Waitlist sheet
 
 export async function POST(request: Request) {
   try {
+    // Lazy load googleapis inside the handler
+    const { google } = await import('googleapis');
+
     // Define SPREADSHEET_ID inside the handler
     const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
 
