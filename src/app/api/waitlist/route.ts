@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
 
-// Initialize the Google Sheets API
-const sheets = google.sheets('v4');
-
 // Your Google Sheets credentials and configuration
 const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
 const WAITLIST_SHEET_RANGE = 'Waitlist!A:E'; // Using the new Waitlist sheet
@@ -19,12 +16,14 @@ export async function POST(request: Request) {
       );
     }
 
-    // Parse the request body
+    // Parse the request body and log it for debugging
     const body = await request.json();
+    console.log("Waitlist POST request body:", body);
     const { name, email, phone, reason } = body;
 
     // Validate required fields
     if (!name || !email || !reason) {
+      console.error("Missing required fields:", { name, email, reason });
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -34,6 +33,7 @@ export async function POST(request: Request) {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
+      console.error("Invalid email format:", email);
       return NextResponse.json(
         { error: 'Invalid email format' },
         { status: 400 }
@@ -52,7 +52,9 @@ export async function POST(request: Request) {
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
 
-    const client = await auth.getClient();
+    // Initialize sheets with the auth client
+    const sheets = google.sheets('v4');
+    sheets.context._options = { ...sheets.context._options, auth };
 
     // Prepare the data for Google Sheets
     const timestamp = new Date().toISOString();
@@ -63,18 +65,17 @@ export async function POST(request: Request) {
       spreadsheetId: SPREADSHEET_ID,
       range: WAITLIST_SHEET_RANGE,
       valueInputOption: 'USER_ENTERED',
-      requestBody: {
-        values,
-      },
+      requestBody: { values },
     });
 
-    if (response.status !== 200) {
-      throw new Error('Failed to save to spreadsheet');
+    if (!response.data) {
+      console.error("Google Sheets append error:", response);
+      throw new Error("Failed to save to spreadsheet");
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error processing waitlist submission:', error);
+    console.error("Error processing waitlist submission:", error);
     return NextResponse.json(
       { 
         error: 'Failed to process submission',
