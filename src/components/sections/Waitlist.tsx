@@ -1,13 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
 import { FiMail, FiCheckCircle, FiUser, FiPhone, FiMessageSquare, FiUsers, FiTrendingUp, FiHeart } from "react-icons/fi";
 import { motion } from "framer-motion";
 import ScrollAnimation from "../ui/ScrollAnimation";
 
 console.log("useState:", typeof useState);
-console.log("useForm:", typeof useForm);
 console.log("FiMail:", typeof FiMail);
 console.log("FiCheckCircle:", typeof FiCheckCircle);
 console.log("FiUser:", typeof FiUser);
@@ -22,10 +20,14 @@ interface FormData {
 }
 
 const reasons = [
-  "Personal mental health support",
-  "Professional interest",
-  "Research purposes",
-  "Other",
+  "I'm looking for mental health support",
+  "I'm a mental health professional",
+  "I'm interested in AI and mental health",
+  "I want to help shape the future of mental healthcare",
+  "I'm a researcher in mental health",
+  "I'm a healthcare provider",
+  "I'm curious about the technology",
+  "Other"
 ];
 
 export default function Waitlist() {
@@ -33,12 +35,8 @@ export default function Waitlist() {
   const [error, setError] = useState<string | null>(null);
   const [signupCount, setSignupCount] = useState<number | null>(null);
   const [countError, setCountError] = useState<string | null>(null);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<FormData>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   // Fetch signup count
   useEffect(() => {
@@ -84,23 +82,64 @@ export default function Waitlist() {
 
     try {
       const formData = new FormData(e.currentTarget);
-      const response = await fetch('https://formspree.io/f/xpzvnqkz', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Accept': 'application/json'
-        }
-      });
+      const data = {
+        name: formData.get('name')?.toString().trim(),
+        email: formData.get('email')?.toString().trim(),
+        phone: formData.get('phone')?.toString().trim() || '',
+        reason: formData.get('reason')?.toString().trim()
+      };
 
-      if (!response.ok) {
-        throw new Error('Failed to submit form');
+      // Validate required fields
+      if (!data.name || data.name.length < 2) {
+        throw new Error('Please enter a valid name (minimum 2 characters)');
       }
 
-      setSuccess(true);
-      e.currentTarget.reset();
+      if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
+        throw new Error('Please enter a valid email address');
+      }
+
+      if (!data.reason) {
+        throw new Error('Please select a reason for joining');
+      }
+
+      console.log('Submitting form data:', data);
+
+      const response = await fetch('/api/waitlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      });
+
+      console.log('API response status:', response.status);
+      const responseData = await response.json();
+      console.log('API response data:', responseData);
+      
+      if (response.ok) {
+        console.log('Form submitted successfully:', responseData);
+        // Reset the form before updating state
+        const form = e.currentTarget;
+        form.reset();
+        setSuccess(true);
+        
+        // Refresh the count after successful submission
+        const countResponse = await fetch('/api/waitlist/count');
+        if (countResponse.ok) {
+          const countData = await countResponse.json();
+          setSignupCount(countData.count);
+        }
+      } else {
+        console.error('Form submission failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData: responseData
+        });
+        throw new Error(responseData.error || responseData.details || 'Failed to submit form. Please try again.');
+      }
     } catch (err) {
-      console.error('Error submitting form:', err);
-      setError('Failed to submit form. Please try again.');
+      console.error('Form submission error:', err);
+      setError(err instanceof Error ? err.message : 'Failed to submit form. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -153,86 +192,125 @@ export default function Waitlist() {
                   )}
                 </div>
 
-                <form onSubmit={onSubmit} className="space-y-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-                      Name *
-                    </label>
+                <form onSubmit={onSubmit} className="space-y-6">
+                  <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 dark:group-focus-within:text-emerald-400 transition-colors">
+                      <FiUser className="h-5 w-5" />
+                    </div>
                     <input
                       type="text"
                       id="name"
                       name="name"
                       required
                       minLength={2}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                      className="pl-10 w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-400 outline-none bg-white/50 dark:bg-black/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
                       placeholder="Your name"
                     />
                   </div>
 
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                      Email *
-                    </label>
+                  <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 dark:group-focus-within:text-emerald-400 transition-colors">
+                      <FiMail className="h-5 w-5" />
+                    </div>
                     <input
                       type="email"
                       id="email"
                       name="email"
                       required
                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                      className="pl-10 w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-400 outline-none bg-white/50 dark:bg-black/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
                       placeholder="your.email@example.com"
                     />
                   </div>
 
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                      Phone (optional)
-                    </label>
+                  <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 dark:group-focus-within:text-emerald-400 transition-colors">
+                      <FiPhone className="h-5 w-5" />
+                    </div>
                     <input
                       type="tel"
                       id="phone"
                       name="phone"
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                      placeholder="Your phone number"
+                      className="pl-10 w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-400 outline-none bg-white/50 dark:bg-black/50 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all duration-200"
+                      placeholder="Your phone number (optional)"
                     />
                   </div>
 
-                  <div>
-                    <label htmlFor="reason" className="block text-sm font-medium text-gray-700">
-                      Why do you want to join? *
-                    </label>
-                    <textarea
+                  <div className="relative group">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 dark:group-focus-within:text-emerald-400 transition-colors">
+                      <FiMessageSquare className="h-5 w-5" />
+                    </div>
+                    <select
                       id="reason"
                       name="reason"
                       required
-                      minLength={10}
-                      rows={3}
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                      placeholder="Tell us why you're interested in joining Whisper Health"
-                    />
+                      className="pl-10 w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-400 outline-none bg-white/50 dark:bg-black/50 text-gray-900 dark:text-white appearance-none cursor-pointer transition-all duration-200"
+                    >
+                      <option value="">Select your reason for interest</option>
+                      {reasons.map((reason) => (
+                        <option key={reason} value={reason}>
+                          {reason}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-gray-400">
+                      <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
                   </div>
 
                   <input type="hidden" name="_subject" value="New Waitlist Signup" />
                   <input type="hidden" name="_captcha" value="false" />
 
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? 'Submitting...' : 'Join Waitlist'}
-                  </button>
-                </form>
+                  {error && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="text-red-500 dark:text-red-400 text-sm text-center bg-red-50 dark:bg-red-900/20 p-4 rounded-xl border border-red-200 dark:border-red-800"
+                    >
+                      <div className="flex items-center gap-2 justify-center">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {error}
+                      </div>
+                    </motion.div>
+                  )}
 
-                {submitted && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-2 mt-6 text-blue-500 dark:text-emerald-400 font-medium justify-center"
+                  {success && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      className="flex items-center gap-2 text-emerald-500 dark:text-emerald-400 text-sm text-center bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800"
+                    >
+                      <FiCheckCircle className="text-xl flex-shrink-0" />
+                      <span>Thank you for joining our waitlist! We'll be in touch soon.</span>
+                    </motion.div>
+                  )}
+
+                  <motion.button
+                    type="submit"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    disabled={isSubmitting}
+                    className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-blue-600 via-emerald-500 to-teal-600 dark:from-emerald-600 dark:via-teal-500 dark:to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    <FiCheckCircle className="text-2xl" /> Thank you! We'll be in touch soon.
-                  </motion.div>
-                )}
+                    {isSubmitting ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        Submitting...
+                      </span>
+                    ) : (
+                      "Join Waitlist"
+                    )}
+                  </motion.button>
+                </form>
               </div>
             </div>
           </ScrollAnimation>
