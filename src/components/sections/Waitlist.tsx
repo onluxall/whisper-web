@@ -19,6 +19,9 @@ interface FormData {
   reason: string;
 }
 
+// Define possible form states
+type FormStatus = 'idle' | 'submitting' | 'success' | 'error';
+
 const reasons = [
   "I'm looking for mental health support",
   "I'm a mental health professional",
@@ -31,12 +34,10 @@ const reasons = [
 ];
 
 export default function Waitlist() {
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<FormStatus>('idle'); // Combined status state
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // Keep error message separate
   const [signupCount, setSignupCount] = useState<number | null>(null);
   const [countError, setCountError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   // Fetch signup count
   useEffect(() => {
@@ -76,9 +77,8 @@ export default function Waitlist() {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    setError(null);
-    setSuccess(false);
+    setStatus('submitting'); // Set status to submitting
+    setErrorMessage(null); // Clear any previous error message
 
     try {
       const formData = new FormData(e.currentTarget);
@@ -118,14 +118,14 @@ export default function Waitlist() {
       
       if (response.ok) {
         console.log('Form submitted successfully:', responseData);
-        // Reset the form before updating state
+        // Reset the form
         const form = e.currentTarget;
         if (form) {
           form.reset();
         } else {
           console.error('Form element is null, cannot reset.');
         }
-        setSuccess(true);
+        setStatus('success'); // Set status to success
         
         // Refresh the count after successful submission
         const countResponse = await fetch('/api/waitlist/count');
@@ -139,13 +139,18 @@ export default function Waitlist() {
           statusText: response.statusText,
           errorData: responseData
         });
-        throw new Error(responseData.error || responseData.details || 'Failed to submit form. Please try again.');
+        const message = responseData.error || responseData.details || 'Failed to submit form. Please try again.';
+        setErrorMessage(message); // Set the error message
+        setStatus('error'); // Set status to error
       }
     } catch (err) {
       console.error('Form submission error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to submit form. Please try again.');
+      const message = err instanceof Error ? err.message : 'Failed to submit form. Please try again.';
+      setErrorMessage(message); // Set the error message
+      setStatus('error'); // Set status to error
     } finally {
-      setIsSubmitting(false);
+      // Note: status is already set to 'success' or 'error' above
+      // No need to set submitting to false here as status handles it.
     }
   };
 
@@ -267,7 +272,8 @@ export default function Waitlist() {
                   <input type="hidden" name="_subject" value="New Waitlist Signup" />
                   <input type="hidden" name="_captcha" value="false" />
 
-                  {error && (
+                  {/* Display Error Message */}
+                  {status === 'error' && errorMessage && (
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -278,12 +284,13 @@ export default function Waitlist() {
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        {error}
+                        {errorMessage}
                       </div>
                     </motion.div>
                   )}
 
-                  {success && (
+                  {/* Display Success Message */}
+                  {status === 'success' && (
                     <motion.div
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -299,10 +306,10 @@ export default function Waitlist() {
                     type="submit"
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    disabled={isSubmitting}
+                    disabled={status === 'submitting'}
                     className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-blue-600 via-emerald-500 to-teal-600 dark:from-emerald-600 dark:via-teal-500 dark:to-blue-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {isSubmitting ? (
+                    {status === 'submitting' ? (
                       <span className="flex items-center justify-center gap-2">
                         <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
