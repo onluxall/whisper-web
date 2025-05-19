@@ -60,7 +60,6 @@ export async function POST(request: Request) {
 
     // Append the data to Google Sheets
     const response = await sheets.spreadsheets.values.append({
-      auth: client,
       spreadsheetId: SPREADSHEET_ID,
       range: WAITLIST_SHEET_RANGE,
       valueInputOption: 'USER_ENTERED',
