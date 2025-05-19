@@ -7,6 +7,16 @@ const WAITLIST_SHEET_RANGE = 'Waitlist!A:E'; // Using the new Waitlist sheet
 
 export async function POST(request: Request) {
   try {
+    // Debug environment variables (without exposing sensitive data)
+    console.log('API: Environment check:', {
+      hasClientEmail: !!process.env.GOOGLE_CLIENT_EMAIL,
+      hasPrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
+      hasSheetId: !!process.env.GOOGLE_SHEET_ID,
+      clientEmailLength: process.env.GOOGLE_CLIENT_EMAIL?.length,
+      privateKeyLength: process.env.GOOGLE_PRIVATE_KEY?.length,
+      sheetIdLength: process.env.GOOGLE_SHEET_ID?.length,
+    });
+
     // Validate environment variables
     if (!process.env.GOOGLE_CLIENT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY || !process.env.GOOGLE_SHEET_ID) {
       console.error('Missing required environment variables');
