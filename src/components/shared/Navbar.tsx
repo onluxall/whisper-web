@@ -9,6 +9,7 @@ const navLinks = [
   { label: "Home", href: "#" },
   { label: "About", href: "#about" },
   { label: "Join Waitlist", href: "#waitlist", showCount: true },
+  { label: "Contact", href: "#contact" },
 ];
 
 export default function Navbar() {
@@ -267,45 +268,61 @@ export default function Navbar() {
                 initial={false}
                 animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
                 transition={{ duration: 0.3 }}
-              >
-                {isMobileMenuOpen ? (
+            >
+              {isMobileMenuOpen ? (
                   <FiX className="h-6 w-6" />
-                ) : (
+              ) : (
                   <FiMenu className="h-6 w-6" />
-                )}
+              )}
               </Motion.div>
             </Motion.button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu Panel */}
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 md:hidden" onClick={() => setIsMobileMenuOpen(false)} />
+      )}
+
+      {/* Mobile Menu Panel - redesigned */}
       <Motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: isMobileMenuOpen ? 1 : 0, y: isMobileMenuOpen ? 0 : -20 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        className={`md:hidden absolute top-16 left-0 w-full bg-white dark:bg-gray-800 shadow-lg py-4 transition-all duration-300 ${isMobileMenuOpen ? 'block' : 'hidden'}`}
+        initial={{ x: '100%' }}
+        animate={{ x: isMobileMenuOpen ? 0 : '100%' }}
+        transition={{ duration: 0.35, ease: 'easeInOut' }}
+        className={`fixed top-0 right-0 h-full w-4/5 max-w-xs bg-white dark:bg-gray-900 shadow-2xl z-50 flex flex-col md:hidden transition-transform duration-300 ${isMobileMenuOpen ? 'block' : 'hidden'}`}
+        style={{ willChange: 'transform' }}
       >
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200 dark:border-gray-800">
+          <span className="text-xl font-bold bg-gradient-to-r from-blue-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent">Menu</span>
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="text-gray-700 dark:text-gray-200 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none"
+            aria-label="Close menu"
+          >
+            <FiX className="h-7 w-7" />
+          </button>
+        </div>
+        <nav className="flex-1 flex flex-col items-center justify-center gap-6 mt-6">
           {navLinks.map((link) => (
-            <Motion.a
+            <a
               key={link.href}
               href={link.href}
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="text-lg font-semibold text-gray-800 dark:text-gray-100 px-6 py-3 rounded-xl hover:bg-blue-50 dark:hover:bg-gray-800 w-4/5 text-center transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
-              whileTap={{ scale: 0.95 }}
             >
-              <span className="flex items-center gap-2">
-                {link.label}
-                {link.showCount && signupCount !== null && (
-                  <span className="flex items-center space-x-1 text-sm text-gray-500 dark:text-gray-400">
-                    <FiUsers className="w-3.5 h-3.5" />
-                    <span>{signupCount}</span>
-                  </span>
-                )}
-              </span>
-            </Motion.a>
+              {link.label}
+              {link.showCount && signupCount !== null && (
+                <span className="ml-2 inline-flex items-center gap-1 text-base text-blue-600 dark:text-emerald-400">
+                  <FiUsers className="w-4 h-4" />
+                  {signupCount}
+                </span>
+              )}
+            </a>
           ))}
+        </nav>
+        <div className="flex-0 px-6 py-4 border-t border-gray-200 dark:border-gray-800 flex items-center justify-center">
+          <span className="text-xs text-gray-400">&copy; {new Date().getFullYear()} Whisper Health</span>
         </div>
       </Motion.div>
     </Motion.nav>

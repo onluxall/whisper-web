@@ -3,7 +3,7 @@ import { google } from 'googleapis';
 
 // Your Google Sheets credentials and configuration
 const SPREADSHEET_ID = process.env.google_sheet_id;
-const WAITLIST_SHEET_RANGE = 'Waitlist!A:E';
+const WAITLIST_SHEET_RANGE = 'Waitlist!A:A';
 
 export async function GET() {
   try {
@@ -48,7 +48,7 @@ export async function GET() {
     const sheets = google.sheets('v4');
     sheets.context._options = { ...sheets.context._options, auth };
 
-    // Get all values from the Waitlist sheet
+    // Get all values from the Waitlist sheet (only column A)
     console.log('API: Fetching sheet data...');
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,

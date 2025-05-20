@@ -66,41 +66,41 @@ export async function POST(request: Request) {
 
     try {
       // Create credentials object inside the handler
-      const credentials = {
+    const credentials = {
         client_email: process.env.google_client_email, // Changed to lowercase
         private_key: process.env.google_private_key, // Changed to lowercase
-      };
+    };
 
       console.log('API: Created credentials object with email:', credentials.client_email);
 
-      // Create a JWT client using the service account credentials
-      const auth = new google.auth.GoogleAuth({
-        credentials,
-        scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-      });
+    // Create a JWT client using the service account credentials
+    const auth = new google.auth.GoogleAuth({
+      credentials,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
 
       console.log('API: Created auth client successfully');
 
-      // Initialize sheets with the auth client
-      const sheets = google.sheets('v4');
-      sheets.context._options = { ...sheets.context._options, auth };
+    // Initialize sheets with the auth client
+    const sheets = google.sheets('v4');
+    sheets.context._options = { ...sheets.context._options, auth };
 
       console.log('API: Initialized sheets client successfully');
 
-      // Prepare the data for Google Sheets
-      const timestamp = new Date().toISOString();
-      const values = [[timestamp, name, email, phone || '', reason]];
+    // Prepare the data for Google Sheets
+    const timestamp = new Date().toISOString();
+    const values = [[timestamp, name, email, phone || '', reason]];
 
-      console.log('API: Attempting to append data to sheet:', {
-        spreadsheetId: SPREADSHEET_ID,
-        range: WAITLIST_SHEET_RANGE,
+    console.log('API: Attempting to append data to sheet:', {
+      spreadsheetId: SPREADSHEET_ID,
+      range: WAITLIST_SHEET_RANGE,
         rowCount: values.length,
         timestamp,
         name,
         email,
         hasPhone: !!phone,
         reason
-      });
+    });
 
       // Append the data to Google Sheets
       const response = await sheets.spreadsheets.values.append({
