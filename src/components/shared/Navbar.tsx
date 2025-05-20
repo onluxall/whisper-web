@@ -221,7 +221,10 @@ export default function Navbar() {
             </div>
 
             <Motion.button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              onClick={(e) => {
+                e.stopPropagation(); // Prevent event propagation
+                setIsMobileMenuOpen(!isMobileMenuOpen);
+              }}
               className="mobile-menu-button w-11 h-11 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors duration-300"
               aria-label="Toggle mobile menu"
               aria-expanded={isMobileMenuOpen}
