@@ -7,8 +7,8 @@
     }
   ],
   "env": {
-    "google_client_email": "google_client_email",
-    "google_private_key": "google_private_key",
-    "google_sheet_id": "google_sheet_id"
+    "google_client_email": "whisper-health-sheets@whisper-health-460308.iam.gserviceaccount.com",
+    "google_private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCny3TaDkOV6NoP\nq1IG0JBlnXNeMjXT04+HQ9WxlMW3PbVmd3XH888Ls610+r0iKXOAUOQWrl0SVRci\nZLaDJPUXhJET0BPxJ0uWEv2oLAO8f0GakzFCotF8n6JWBYz4VaagFeG0xnhFgok1\nq+ENNOgeTAyhrvYQQTL8XS4VF1cGxJxHJ8037AfMA4+ixNPkorSmaI/D7jJnm6gb\nep8SIiUFoMvOdhE0N9Tr05qgsONGEfor7ac8zNNzMsxNAPy6lHL8OYWVIljEeKwd\nwFaUde/qQthYGgeHQ8vzzJuzcCNNHoqIK0SBVVkwqdKXxolmnlsblYFsCuzMiNt+\nlmZUzN69AgMBAAECggEAFaS/Sl87pYsXEZ1aI8nkTk8scfKNEelAosSDvHfBtxyt\nGO4A0c1noA1JqwSqv8zT+rG0ch6En9g89zFBf5IVUTbG1eTppZoZfF6vvHEM/FP3\n3N3upTdGSUp4EJt/rwqxRwX7iqttGR4436TvjxoLdNj/ah2c3MTkNDw6tPrBPXyK\nLiJsGdyd69WvkA5c4xmWAz/KsrhP4PjsnDEwuqvhDK7J12nU5Zjk52YRACVNqOyk\n4GWHrxCpVaDI3zVkuGNY7EayKlO3ka1wQlt2wxqe8mY+siJDHqdtm0zZA1Rq11Yz\nnadbbXMforcJZaeXEAZ38FdCC/xAsSduUZEFWZ042wKBgQDjlzVkuarFm9OrgQp3\nikqeF3VgJuAn7ZxGrm+Ivw/M5pPsCspFmRTc+msikn5tMqfH+6Q01GGzYf0KgBtS\nUCu450yRI+WyLo9aG41qUa3AtEP5/H1BSyBDg5mPHe0+E0prcgDYyg3m0ULr6/vP\nuSwdOoypQR4c0YvEqrH970h5WwKBgQC8vW9degI3GyMN2tZEv4le7OULl1S7/R16\nzMKAH5oVHhns6pRz4JzjnTDq0qLB9XxXfxZAInvcHirqZTbTvm2X09u5tQeY9hdK\n1m7KFYbv/m9eQ1tTDgvQMAur3m+GKKv7elA9/nVea7y4d9N8Wa6BsGyCnCUx0EFR\nfI9cETDrxwKBgQDLbllXk25F/CeT4WBNwds4vJc6PwWWKxnJRBqGDOI+sMv/7RUo\naNDxRRWGbZN8YA8A/rmkT0KVaT0ZqbDCPs8WFAmoooGqZ1vTm1Uod6Hr4jXwufPr\n7Q8Fyhf0iTeKiQu4Rsri/Ji4fMxovSL0Zfw8lB0vHPmhoNxiCoHXDY+miQKBgEjV\nKUZ/MJ+nPy23hvvcldwlunVwnmg00s1yepQKneEMTqDYHRViVeiX3iqfweLrImJ5\nTlLNe9KDabgt+qxXTd9LB/1v2FC0lmRwvywIhpvSKZPMlk9EmlZqU/aszYiN5WAT\n4ScrLIuVM6xTwS65RNgTBqyYKNpCLRKO6Jt0ntY9AoGBAOLPQeEWHe0SXtciTrr9\ngdE7UZR68tipDjAiQHQ/PFazF5qXnpzQ3jU5Z3nRdY5BmxnNgH11P9wfQOIj1Zqp\nMWmaI5L0e3MKEc3EYa5dETUJVf69EsLjcXRNZeI1EGl9smiT2f7l/wtQnGz2Vvr4\nHLAKvKF5fhBf0cqWstSJYhB3\n-----END PRIVATE KEY-----\n",
+    "google_sheet_id": "1NCojWC9UPi69qbOqje3NYkMZtt5i_sHrwkM4ONUnV6I"
   }
 }
