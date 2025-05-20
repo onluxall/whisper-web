@@ -193,73 +193,36 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center space-x-4">
+          <div className="md:hidden flex items-center space-x-6">
+            {/* Theme Toggle for Mobile */}
             <div className="relative">
               <Motion.button
                 onClick={() => setShowThemeMenu(!showThemeMenu)}
-                className="relative w-10 h-5 rounded-full bg-gray-200 dark:bg-gray-700 p-1 transition-colors duration-300"
+                className="relative w-12 h-6 rounded-full bg-gray-200 dark:bg-gray-700 p-1 transition-colors duration-300"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <Motion.div
                   className="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white dark:bg-gray-800 shadow-lg flex items-center justify-center"
                   animate={{
-                    x: theme === 'dark' ? 16 : theme === 'system' ? 8 : 0,
+                    x: theme === 'dark' ? 20 : theme === 'system' ? 10 : 0,
                   }}
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 >
                   {theme === 'light' ? (
-                    <FiSun className="w-2 h-2 text-yellow-500" />
+                    <FiSun className="w-3 h-3 text-yellow-500" />
                   ) : theme === 'dark' ? (
-                    <FiMoon className="w-2 h-2 text-blue-300" />
+                    <FiMoon className="w-3 h-3 text-blue-300" />
                   ) : (
-                    <FiMonitor className="w-2 h-2 text-gray-500" />
+                    <FiMonitor className="w-3 h-3 text-gray-500" />
                   )}
                 </Motion.div>
               </Motion.button>
-
-              {/* Mobile Theme Menu */}
-              {showThemeMenu && (
-                <Motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
-                >
-                  <button
-                    onClick={() => handleThemeChange('light')}
-                    className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                      theme === 'light' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
-                    }`}
-                  >
-                    <FiSun className="w-4 h-4" />
-                    Light
-                  </button>
-                  <button
-                    onClick={() => handleThemeChange('dark')}
-                    className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                      theme === 'dark' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
-                    }`}
-                  >
-                    <FiMoon className="w-4 h-4" />
-                    Dark
-                  </button>
-                  <button
-                    onClick={() => handleThemeChange('system')}
-                    className={`w-full px-4 py-2 text-left text-sm flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                      theme === 'system' ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
-                    }`}
-                  >
-                    <FiMonitor className="w-4 h-4" />
-                    System
-                  </button>
-                </Motion.div>
-              )}
             </div>
 
             <Motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="mobile-menu-button text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+              className="mobile-menu-button p-2 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
               aria-label="Toggle mobile menu"
               aria-expanded={isMobileMenuOpen}
             >
@@ -284,26 +247,28 @@ export default function Navbar() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: isMobileMenuOpen ? 1 : 0, y: isMobileMenuOpen ? 0 : -20 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className={`md:hidden absolute top-16 left-0 w-full bg-white dark:bg-gray-800 shadow-lg py-4 transition-all duration-300 ${isMobileMenuOpen ? 'block' : 'hidden'}`}
+        className={`md:hidden absolute top-16 left-0 w-full bg-white dark:bg-gray-800 shadow-lg py-4 transition-all duration-300 ${
+          isMobileMenuOpen ? 'block' : 'hidden'
+        }`}
       >
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div className="px-4 pt-2 pb-3 space-y-3 sm:px-6">
           {navLinks.map((link) => (
             <Motion.a
               key={link.href}
               href={link.href}
-              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
               whileTap={{ scale: 0.95 }}
             >
-              <span className="flex items-center gap-2">
-                {link.label}
+              <div className="flex items-center justify-between">
+                <span>{link.label}</span>
                 {link.showCount && signupCount !== null && (
-                  <span className="flex items-center space-x-1 text-sm text-gray-500 dark:text-gray-400">
-                    <FiUsers className="w-3.5 h-3.5" />
-                    <span>{signupCount}</span>
+                  <span className="flex items-center space-x-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm text-gray-600 dark:text-gray-300">
+                    <FiUsers className="w-4 h-4" />
+                    <span className="font-medium">{signupCount}</span>
                   </span>
                 )}
-              </span>
+              </div>
             </Motion.a>
           ))}
         </div>
