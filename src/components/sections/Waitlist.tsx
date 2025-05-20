@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { FiMail, FiCheckCircle, FiUser, FiPhone, FiMessageSquare, FiUsers, FiTrendingUp, FiHeart } from "react-icons/fi";
+import { FiMail, FiCheckCircle, FiUser, FiPhone, FiMessageSquare, FiUsers, FiTrendingUp, FiHeart, FiLoader } from "react-icons/fi";
 import { motion } from "framer-motion";
 import ScrollAnimation from "../ui/ScrollAnimation";
 
@@ -279,7 +279,7 @@ export default function Waitlist() {
                   >
                     <div className="flex-shrink-0">
                       <div className="p-3 md:p-4 bg-blue-50 dark:bg-blue-500/10 rounded-xl">
-                        <benefit.icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                        {benefit.icon}
                       </div>
                     </div>
                     <div>
