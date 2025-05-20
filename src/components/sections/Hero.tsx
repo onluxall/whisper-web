@@ -44,34 +44,34 @@ export default function Hero() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,_var(--tw-gradient-stops))] from-emerald-400/20 via-transparent to-transparent" />
       </ParallaxSection>
 
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <ScrollAnimation animation="fadeUp" threshold={0.2} className="mb-6">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-4xl mx-auto text-center py-12 md:py-20">
+          <ScrollAnimation animation="fadeUp" threshold={0.2} className="mb-8 md:mb-10">
             <AnimatedText
               text="Start Your Journey"
               type="heading"
               animation="typing"
-              className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white"
+              className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-4 md:mb-6"
               delay={0.2}
             />
           </ScrollAnimation>
 
-          <ScrollAnimation animation="fadeUp" delay={0.3} threshold={0.2} className="mb-8">
+          <ScrollAnimation animation="fadeUp" delay={0.3} threshold={0.2} className="mb-10 md:mb-12">
             <AnimatedText
               text="AI-powered mental health support, available 24/7"
               type="subheading"
               animation="slideUp"
-              className="text-lg md:text-xl font-medium text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
+              className="text-lg md:text-xl font-medium text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4"
             />
           </ScrollAnimation>
 
-          <ScrollAnimation animation="scaleUp" delay={0.4} threshold={0.2} className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <ScrollAnimation animation="scaleUp" delay={0.4} threshold={0.2} className="flex flex-col sm:flex-row gap-4 justify-center mb-16 md:mb-20 px-4">
             <motion.a
               href="#waitlist"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="btn-primary group relative overflow-hidden"
+              className="btn-primary group relative overflow-hidden w-full sm:w-auto"
             >
               <span className="relative z-10">Sign Up Free</span>
               <motion.div
@@ -86,7 +86,7 @@ export default function Hero() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-              className="btn-secondary group relative overflow-hidden"
+              className="btn-secondary group relative overflow-hidden w-full sm:w-auto"
             >
               <span className="relative z-10">How It Works</span>
               <motion.div
@@ -98,13 +98,13 @@ export default function Hero() {
           </ScrollAnimation>
 
           <ScrollAnimation animation="fadeUp" delay={0.5} threshold={0.2}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto px-4">
               {features.map((feature, index) => (
                 <motion.div
                   key={feature.title}
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                  className="p-4 rounded-xl bg-white/90 dark:bg-gray-800/50 backdrop-blur-sm border border-blue-100/50 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300"
+                  className="p-6 rounded-xl bg-white/90 dark:bg-gray-800/50 backdrop-blur-sm border border-blue-100/50 dark:border-gray-700 shadow-sm hover:shadow-lg transition-all duration-300"
                 >
                   <motion.div
                     animate={{ 
@@ -118,11 +118,11 @@ export default function Hero() {
                       ease: "easeInOut",
                       delay: index * 0.2
                     }}
-                    className="w-12 h-12 mb-4 mx-auto text-blue-500 dark:text-emerald-400"
+                    className="w-12 h-12 mb-5 mx-auto text-blue-500 dark:text-emerald-400"
                   >
                     {feature.icon}
                   </motion.div>
-                  <h3 className="text-lg font-semibold mb-2 text-blue-900 dark:text-white">
+                  <h3 className="text-lg font-semibold mb-3 text-blue-900 dark:text-white">
                     {feature.title}
                   </h3>
                   <p className="text-blue-700 dark:text-gray-300 text-sm leading-relaxed">

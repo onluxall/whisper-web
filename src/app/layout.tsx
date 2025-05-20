@@ -25,7 +25,7 @@ export default function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider>
           <Navbar />
-          <div className="pt-16 min-h-screen flex flex-col">
+          <div className="pt-16 min-h-screen flex flex-col space-y-8 md:space-y-16">
             {children}
           </div>
           <Footer />
