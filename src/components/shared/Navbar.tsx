@@ -71,7 +71,7 @@ export default function Navbar() {
       transition={{ duration: 0.7, ease: "easeOut" }}
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-white/80 dark:bg-black/80 backdrop-blur-lg shadow-lg"
+          ? "bg-white/90 dark:bg-black/90 backdrop-blur-md shadow-lg border-b border-gray-200/50 dark:border-gray-800/50"
           : "bg-transparent"
       }`}
     >
@@ -80,7 +80,7 @@ export default function Navbar() {
           {/* Logo */}
           <Motion.a 
             href="#" 
-            className="text-2xl font-extrabold bg-gradient-to-r from-blue-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent"
+            className="text-2xl font-extrabold bg-gradient-to-r from-blue-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent hover:opacity-90 transition-opacity"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -192,29 +192,29 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Mobile Menu Button - Improved spacing and touch targets */}
-          <div className="md:hidden flex items-center space-x-6">
+          {/* Mobile Menu Button - Enhanced spacing and visual design */}
+          <div className="md:hidden flex items-center space-x-4">
             {/* Theme Toggle for Mobile */}
             <div className="relative">
               <Motion.button
                 onClick={() => setShowThemeMenu(!showThemeMenu)}
-                className="relative w-12 h-6 rounded-full bg-gray-200 dark:bg-gray-700 p-1 transition-colors duration-300"
+                className="relative w-11 h-11 rounded-full bg-gray-100 dark:bg-gray-800 p-2.5 transition-colors duration-300 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <Motion.div
-                  className="absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white dark:bg-gray-800 shadow-lg flex items-center justify-center"
+                  className="w-full h-full flex items-center justify-center"
                   animate={{
-                    x: theme === 'dark' ? 20 : theme === 'system' ? 10 : 0,
+                    rotate: theme === 'dark' ? 180 : 0,
                   }}
-                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  transition={{ duration: 0.3 }}
                 >
                   {theme === 'light' ? (
-                    <FiSun className="w-3 h-3 text-yellow-500" />
+                    <FiSun className="w-5 h-5 text-yellow-500" />
                   ) : theme === 'dark' ? (
-                    <FiMoon className="w-3 h-3 text-blue-300" />
+                    <FiMoon className="w-5 h-5 text-blue-300" />
                   ) : (
-                    <FiMonitor className="w-3 h-3 text-gray-500" />
+                    <FiMonitor className="w-5 h-5 text-gray-500" />
                   )}
                 </Motion.div>
               </Motion.button>
@@ -222,7 +222,7 @@ export default function Navbar() {
 
             <Motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="mobile-menu-button p-2 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500/50 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="mobile-menu-button w-11 h-11 flex items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-colors duration-300"
               aria-label="Toggle mobile menu"
               aria-expanded={isMobileMenuOpen}
             >
@@ -230,11 +230,12 @@ export default function Navbar() {
                 initial={false}
                 animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
                 transition={{ duration: 0.3 }}
+                className="w-5 h-5"
               >
                 {isMobileMenuOpen ? (
-                  <FiX className="h-6 w-6" />
+                  <FiX className="w-full h-full" />
                 ) : (
-                  <FiMenu className="h-6 w-6" />
+                  <FiMenu className="w-full h-full" />
                 )}
               </Motion.div>
             </Motion.button>
@@ -242,31 +243,36 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu Panel */}
+      {/* Mobile Menu Panel - Enhanced visual design */}
       <Motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: isMobileMenuOpen ? 1 : 0, y: isMobileMenuOpen ? 0 : -20 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className={`md:hidden absolute top-16 left-0 w-full bg-white dark:bg-gray-800 shadow-lg py-4 transition-all duration-300 ${
+        className={`md:hidden absolute top-16 left-0 w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg border-b border-gray-200/50 dark:border-gray-800/50 py-4 transition-all duration-300 ${
           isMobileMenuOpen ? 'block' : 'hidden'
         }`}
       >
-        <div className="px-4 pt-2 pb-3 space-y-3 sm:px-6">
+        <div className="px-4 pt-2 pb-3 space-y-2 sm:px-6">
           {navLinks.map((link) => (
             <Motion.a
               key={link.href}
               href={link.href}
-              className="block px-4 py-3 rounded-lg text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="block px-4 py-3.5 rounded-xl text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100/80 dark:hover:bg-gray-800/80 transition-colors"
               onClick={() => setIsMobileMenuOpen(false)}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
               <div className="flex items-center justify-between">
-                <span>{link.label}</span>
+                <span className="font-semibold">{link.label}</span>
                 {link.showCount && signupCount !== null && (
-                  <span className="flex items-center space-x-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm text-gray-600 dark:text-gray-300">
+                  <Motion.span
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="flex items-center space-x-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-900/30 rounded-full text-sm text-blue-600 dark:text-blue-300"
+                  >
                     <FiUsers className="w-4 h-4" />
                     <span className="font-medium">{signupCount}</span>
-                  </span>
+                  </Motion.span>
                 )}
               </div>
             </Motion.a>
