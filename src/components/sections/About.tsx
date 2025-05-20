@@ -148,7 +148,7 @@ export default function About() {
   }, []);
 
   return (
-    <section id="about" className="relative py-20 md:py-32 overflow-hidden">
+    <section id="about" className="relative py-32 overflow-hidden">
       {/* Background with gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-white via-gray-50 to-white dark:from-gray-950 dark:via-gray-900 dark:to-gray-950" />
       
@@ -165,18 +165,18 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="text-center mb-12 md:mb-16 px-4"
+          className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6">
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Coming Soon: Your AI Health Assistant
           </h2>
-          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             We're building a revolutionary health assistant that will transform how you manage your wellness journey. Join our waitlist to be among the first to experience it.
           </p>
         </motion.div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mb-12 md:mb-16 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -184,20 +184,20 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="relative bg-white dark:bg-gray-800/50 rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700/50"
+              className="relative bg-white dark:bg-gray-800/50 rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700/50"
             >
-              <div className="flex items-center gap-4 md:gap-6">
-                <div className="p-3 md:p-4 bg-blue-50 dark:bg-blue-500/10 rounded-xl">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-blue-50 dark:bg-blue-500/10 rounded-xl">
                   <stat.icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-sm md:text-base font-medium text-gray-600 dark:text-gray-400">
+                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
                     {stat.label}
                   </p>
-                  <p className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mt-1 md:mt-2">
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
                     {stat.value}
                   </p>
-                  <p className="text-sm md:text-base text-gray-500 dark:text-gray-400 mt-1 md:mt-2">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                     {stat.description}
                   </p>
                 </div>
@@ -212,55 +212,55 @@ export default function About() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white dark:bg-gray-800/50 rounded-2xl p-6 md:p-8 shadow-lg border border-gray-100 dark:border-gray-700/50 mx-4 md:mx-0"
+          className="bg-white dark:bg-gray-800/50 rounded-2xl p-8 shadow-lg border border-gray-100 dark:border-gray-700/50"
         >
-          <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-6 md:mb-8">
+          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             What We're Building
           </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <h4 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-4 md:mb-6">
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Core Features
               </h4>
-              <ul className="space-y-4 md:space-y-5">
-                <li className="flex items-center gap-3 md:gap-4 text-gray-600 dark:text-gray-400">
-                  <FiCode className="w-5 h-5 text-blue-500 flex-shrink-0" />
-                  <span>AI-powered health assistant</span>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                  <FiCode className="w-5 h-5 text-blue-500" />
+                  AI-powered health assistant
                 </li>
-                <li className="flex items-center gap-3 md:gap-4 text-gray-600 dark:text-gray-400">
-                  <FiCode className="w-5 h-5 text-blue-500 flex-shrink-0" />
-                  <span>Secure and private</span>
+                <li className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                  <FiCode className="w-5 h-5 text-blue-500" />
+                  Secure and private
                 </li>
-                <li className="flex items-center gap-3 md:gap-4 text-gray-600 dark:text-gray-400">
-                  <FiCode className="w-5 h-5 text-blue-500 flex-shrink-0" />
-                  <span>24/7 availability</span>
+                <li className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                  <FiCode className="w-5 h-5 text-blue-500" />
+                  24/7 availability
                 </li>
-                <li className="flex items-center gap-3 md:gap-4 text-gray-600 dark:text-gray-400">
-                  <FiCode className="w-5 h-5 text-blue-500 flex-shrink-0" />
-                  <span>Personalized support</span>
+                <li className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                  <FiCode className="w-5 h-5 text-blue-500" />
+                  Personalized support
                 </li>
               </ul>
             </div>
             <div>
-              <h4 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-4 md:mb-6">
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 Coming Soon
               </h4>
-              <ul className="space-y-4 md:space-y-5">
-                <li className="flex items-center gap-3 md:gap-4 text-gray-600 dark:text-gray-400">
-                  <FiClock className="w-5 h-5 text-blue-500 flex-shrink-0" />
-                  <span>Mobile app</span>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                  <FiClock className="w-5 h-5 text-blue-500" />
+                  Mobile app
                 </li>
-                <li className="flex items-center gap-3 md:gap-4 text-gray-600 dark:text-gray-400">
-                  <FiClock className="w-5 h-5 text-blue-500 flex-shrink-0" />
-                  <span>Advanced insights</span>
+                <li className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                  <FiClock className="w-5 h-5 text-blue-500" />
+                  Advanced insights
                 </li>
-                <li className="flex items-center gap-3 md:gap-4 text-gray-600 dark:text-gray-400">
-                  <FiClock className="w-5 h-5 text-blue-500 flex-shrink-0" />
-                  <span>Health tracking</span>
+                <li className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                  <FiClock className="w-5 h-5 text-blue-500" />
+                  Health tracking
                 </li>
-                <li className="flex items-center gap-3 md:gap-4 text-gray-600 dark:text-gray-400">
-                  <FiClock className="w-5 h-5 text-blue-500 flex-shrink-0" />
-                  <span>Community features</span>
+                <li className="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                  <FiClock className="w-5 h-5 text-blue-500" />
+                  Community features
                 </li>
               </ul>
             </div>
