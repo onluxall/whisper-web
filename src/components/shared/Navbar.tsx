@@ -192,7 +192,7 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - Improved spacing and touch targets */}
           <div className="md:hidden flex items-center space-x-6">
             {/* Theme Toggle for Mobile */}
             <div className="relative">
