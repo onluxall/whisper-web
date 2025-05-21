@@ -16,7 +16,6 @@ const navLinks = [
 export default function Navbar() {
   const { theme, setTheme, toggleTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [signupCount, setSignupCount] = useState<number | null>(null);
   const [showThemeMenu, setShowThemeMenu] = useState(false);
 
@@ -38,15 +37,6 @@ export default function Navbar() {
     // Refresh count every minute
     const interval = setInterval(fetchCount, 60000);
     return () => clearInterval(interval);
-  }, []);
-
-  // Handle scroll effect
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Add click outside handler for theme menu
@@ -72,11 +62,7 @@ export default function Navbar() {
       initial={{ y: -40, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.7, ease: "easeOut" }}
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-white/80 dark:bg-black/80 backdrop-blur-lg shadow-lg"
-          : "bg-transparent"
-      }`}
+      className="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent"
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
