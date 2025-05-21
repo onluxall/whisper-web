@@ -290,7 +290,7 @@ export default function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden"
+            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden mobile-menu-overlay"
             onClick={() => setIsMobileMenuOpen(false)}
             aria-hidden="true"
           />
@@ -306,7 +306,7 @@ export default function Navbar() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'tween', duration: 0.3 }}
-            className="fixed top-0 right-0 h-full w-4/5 max-w-xs bg-white dark:bg-gray-900 shadow-2xl z-50 flex flex-col md:hidden"
+            className="fixed top-0 right-0 h-full w-4/5 max-w-xs bg-white dark:bg-gray-900 shadow-2xl z-50 flex flex-col md:hidden mobile-menu"
             style={{ willChange: 'transform' }}
             aria-label="Mobile menu"
           >
