@@ -48,7 +48,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ open, onClose, navLinks, signup
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="fixed top-0 right-0 h-screen w-4/5 max-w-xs bg-white/60 dark:bg-gray-900/60 shadow-2xl z-50 flex flex-col md:hidden mobile-menu border-l border-blue-100/30 dark:border-gray-800/80"
+          className="fixed top-0 right-0 h-screen w-4/5 max-w-xs bg-white/20 dark:bg-gray-900/30 shadow-2xl z-50 flex flex-col md:hidden mobile-menu border border-white/40 dark:border-gray-700/40 backdrop-blur-lg"
           style={{ willChange: 'transform' }}
           aria-label="Mobile menu"
         >
