@@ -49,6 +49,19 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Add click outside handler for theme menu
+  useEffect(() => {
+    if (!showThemeMenu) return;
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest('.theme-menu') && !target.closest('.theme-menu-button')) {
+        setShowThemeMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showThemeMenu]);
+
   const handleThemeChange = (newTheme: "light" | "dark" | "system") => {
     setTheme(newTheme);
     setShowThemeMenu(false);
@@ -109,7 +122,7 @@ export default function Navbar() {
             <div className="relative">
               <Motion.button
                 onClick={() => setShowThemeMenu(!showThemeMenu)}
-                className="relative w-12 h-6 rounded-full bg-gray-200 dark:bg-gray-700 p-1 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                className="relative w-12 h-6 rounded-full bg-gray-200 dark:bg-gray-700 p-1 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500/50 theme-menu-button"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 initial={{ opacity: 0, rotate: -180 }}
@@ -148,7 +161,7 @@ export default function Navbar() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
+                  className="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50 theme-menu"
                 >
                   <button
                     onClick={() => handleThemeChange('light')}
@@ -187,7 +200,7 @@ export default function Navbar() {
             <div className="relative">
               <Motion.button
                 onClick={() => setShowThemeMenu(!showThemeMenu)}
-                className="relative w-10 h-5 rounded-full bg-gray-200 dark:bg-gray-700 p-1 transition-colors duration-300"
+                className="relative w-10 h-5 rounded-full bg-gray-200 dark:bg-gray-700 p-1 transition-colors duration-300 theme-menu-button"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -198,13 +211,20 @@ export default function Navbar() {
                   }}
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
                 >
-                  {theme === 'light' ? (
-                    <FiSun className="w-2 h-2 text-yellow-500" />
-                  ) : theme === 'dark' ? (
-                    <FiMoon className="w-2 h-2 text-blue-300" />
-                  ) : (
-                    <FiMonitor className="w-2 h-2 text-gray-500" />
-                  )}
+                  <Motion.div
+                    initial={false}
+                    animate={{ rotate: theme === 'dark' ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-yellow-500 dark:text-blue-300"
+                  >
+                    {theme === 'light' ? (
+                      <FiSun className="w-2 h-2 text-yellow-500" />
+                    ) : theme === 'dark' ? (
+                      <FiMoon className="w-2 h-2 text-blue-300" />
+                    ) : (
+                      <FiMonitor className="w-2 h-2 text-gray-500" />
+                    )}
+                  </Motion.div>
                 </Motion.div>
               </Motion.button>
 
@@ -214,7 +234,7 @@ export default function Navbar() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
-                  className="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50"
+                  className="absolute right-0 mt-2 w-48 rounded-xl bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50 theme-menu"
                 >
                   <button
                     onClick={() => handleThemeChange('light')}
