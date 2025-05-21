@@ -41,7 +41,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!mounted) return;
     applyTheme(theme);
-    localStorage.setItem('theme', theme);
+    if (theme === 'system') {
+      localStorage.removeItem('theme');
+    } else {
+      localStorage.setItem('theme', theme);
+    }
   }, [theme, mounted]);
 
   // Listen for system theme changes
