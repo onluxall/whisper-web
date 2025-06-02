@@ -4,14 +4,13 @@ import { google } from 'googleapis';
 // Your Google Sheets credentials and configuration
 const SPREADSHEET_ID = process.env.google_sheet_id;
 const WAITLIST_SHEET_RANGE = 'Waitlist!A:A';
-const WEBHOOK_SECRET = process.env.GOOGLE_SHEETS_WEBHOOK_SECRET;
+const WEBHOOK_SECRET = '0762580a4f98e57116fa4718745b102cbabef89c5e1d51677e89e8bc6439b9ca';
 
 // Helper function to verify webhook secret
 function verifyWebhookSecret(request: Request): boolean {
-  // Check for secret in query parameters (for GET requests)
-  const { searchParams } = new URL(request.url);
-  const querySecret = searchParams.get('secret');
-  return querySecret === WEBHOOK_SECRET;
+  const url = new URL(request.url);
+  const secret = url.searchParams.get('secret');
+  return secret === WEBHOOK_SECRET;
 }
 
 // Helper function to get waitlist count

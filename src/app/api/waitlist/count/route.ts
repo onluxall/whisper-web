@@ -2,16 +2,9 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-    // Get the webhook secret from environment variables
-    const webhookSecret = process.env.GOOGLE_SHEETS_WEBHOOK_SECRET;
-    if (!webhookSecret) {
-      console.error('API: Missing webhook secret');
-      return NextResponse.json(
-        { error: 'Server configuration error' },
-        { status: 500 }
-      );
-    }
-
+    // Use hardcoded webhook secret
+    const webhookSecret = '0762580a4f98e57116fa4718745b102cbabef89c5e1d51677e89e8bc6439b9ca';
+    
     // Get the base URL from environment variables
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
     if (!baseUrl) {
