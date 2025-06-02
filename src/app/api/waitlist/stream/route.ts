@@ -1,3 +1,6 @@
+// Force this route to be dynamic - prevents static generation
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from 'next/server';
 import { getCurrentCount, addClient, removeClient } from '@/lib/waitlist';
 
