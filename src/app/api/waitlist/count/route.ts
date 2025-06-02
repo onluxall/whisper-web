@@ -22,14 +22,16 @@ export async function GET() {
       );
     }
 
-    // Construct the webhook URL
-    const webhookUrl = new URL('/api/waitlist/webhook', baseUrl);
-    webhookUrl.searchParams.set('secret', webhookSecret);
+    // Ensure baseUrl ends with a slash
+    const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+    
+    // Construct the webhook URL properly
+    const webhookUrl = `${normalizedBaseUrl}api/waitlist/webhook?secret=${webhookSecret}`;
 
-    console.log('API: Fetching count from webhook:', webhookUrl.toString());
+    console.log('API: Fetching count from webhook:', webhookUrl);
 
     // Make authenticated request to the webhook endpoint
-    const response = await fetch(webhookUrl.toString(), {
+    const response = await fetch(webhookUrl, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
