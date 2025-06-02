@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { google } from 'googleapis';
+import { getCurrentCount, addClient, removeClient } from '@/lib/waitlist';
 
 // Your Google Sheets credentials and configuration
 const SPREADSHEET_ID = process.env.google_sheet_id;
@@ -57,7 +57,7 @@ export async function GET() {
   const stream = new ReadableStream({
     start(controller) {
       // Add this client to the set of connected clients
-      clients.add(controller);
+      addClient(controller);
 
       // Send initial count
       getCurrentCount().then(count => {
@@ -65,7 +65,7 @@ export async function GET() {
       }).catch(error => {
         console.error('Error getting initial count:', error);
         controller.close();
-        clients.delete(controller);
+        removeClient(controller);
       });
 
       // Set up periodic refresh (every 30 seconds)
@@ -77,14 +77,14 @@ export async function GET() {
           console.error('Error refreshing count:', error);
           clearInterval(interval);
           controller.close();
-          clients.delete(controller);
+          removeClient(controller);
         }
       }, 30000);
 
       // Clean up when the client disconnects
       return () => {
         clearInterval(interval);
-        clients.delete(controller);
+        removeClient(controller);
       };
     }
   });

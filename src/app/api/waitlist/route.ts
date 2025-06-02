@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { google } from 'googleapis';
-import { notifyCountUpdate } from './stream/route';
+import { notifyCountUpdate } from '@/lib/waitlist';
 // Removed: import { google } from 'googleapis'; // Lazy load instead
 
 // Your Google Sheets credentials and configuration
