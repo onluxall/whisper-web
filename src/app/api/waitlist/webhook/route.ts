@@ -11,13 +11,7 @@ function verifyWebhookSecret(request: Request): boolean {
   // Check for secret in query parameters (for GET requests)
   const { searchParams } = new URL(request.url);
   const querySecret = searchParams.get('secret');
-  if (querySecret === WEBHOOK_SECRET) return true;
-
-  // Check for secret in headers (for POST requests)
-  const headerSecret = request.headers.get('x-webhook-secret');
-  if (headerSecret === WEBHOOK_SECRET) return true;
-
-  return false;
+  return querySecret === WEBHOOK_SECRET;
 }
 
 // Helper function to get waitlist count
@@ -72,31 +66,6 @@ export async function GET(request: Request) {
     return NextResponse.json(
       { 
         error: 'Failed to get waitlist count',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    );
-  }
-}
-
-export async function POST(request: Request) {
-  try {
-    // Verify webhook secret
-    if (!verifyWebhookSecret(request)) {
-      console.error('API: Invalid webhook secret');
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    const count = await getWaitlistCount();
-    return NextResponse.json({ count });
-  } catch (error) {
-    console.error('API: Error processing webhook:', error);
-    return NextResponse.json(
-      { 
-        error: 'Failed to process webhook',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
