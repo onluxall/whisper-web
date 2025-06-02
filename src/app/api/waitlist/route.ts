@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+import { google } from 'googleapis';
+import { notifyCountUpdate } from './stream/route';
 // Removed: import { google } from 'googleapis'; // Lazy load instead
 
 // Your Google Sheets credentials and configuration
@@ -120,6 +122,9 @@ export async function POST(request: Request) {
         console.error("Google Sheets append error:", response);
         throw new Error("Failed to save to spreadsheet");
       }
+
+      // Notify all connected clients of the count update
+      await notifyCountUpdate();
 
       return NextResponse.json({ success: true });
     } catch (sheetsError: unknown) {

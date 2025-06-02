@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { FiClock, FiUsers, FiCode } from "react-icons/fi";
 import { useEffect, useState } from "react";
+import { useWaitlistCount } from '@/hooks/useWaitlistCount';
 
 interface SheetData {
   developmentProgress: string;
@@ -34,6 +35,22 @@ export default function About() {
       description: "Expected release date"
     }
   ]);
+
+  const { count: waitlistCount, error: waitlistError } = useWaitlistCount();
+
+  // Update stats when waitlist count changes
+  useEffect(() => {
+    setStats(prevStats => [
+      prevStats[0], // Keep development progress
+      {
+        label: "Waitlist Signups",
+        value: waitlistError ? "Join Now" : (waitlistCount?.toString() || "Loading..."),
+        icon: FiUsers,
+        description: waitlistError ? "Be among the first to try" : "People waiting to join"
+      },
+      prevStats[2] // Keep target launch
+    ]);
+  }, [waitlistCount, waitlistError]);
 
   // Fetch development stats
   useEffect(() => {
@@ -93,57 +110,6 @@ export default function About() {
     fetchStats();
     // Refresh stats every 5 minutes
     const interval = setInterval(fetchStats, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Fetch waitlist count separately
-  useEffect(() => {
-    const fetchWaitlistCount = async () => {
-      try {
-        console.log('Fetching waitlist count from /api/waitlist/count...');
-        const response = await fetch('/api/waitlist/count');
-        console.log('Waitlist count response status:', response.status);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch waitlist count: ${response.status} ${response.statusText}`);
-        }
-        const data: WaitlistCount = await response.json();
-        console.log('Raw waitlist count data:', data);
-
-        if (typeof data.count !== 'number') {
-          console.error('Invalid waitlist count format:', data);
-          throw new Error('Invalid waitlist count format');
-        }
-
-        // Update only the waitlist stat
-        setStats(prevStats => [
-          prevStats[0], // Keep development progress
-          {
-            label: "Waitlist Signups",
-            value: data.count.toString(),
-            icon: FiUsers,
-            description: "People waiting to join"
-          },
-          prevStats[2] // Keep target launch
-        ]);
-      } catch (error) {
-        console.error('Error fetching waitlist count:', error);
-        // Update waitlist stat to show error state
-        setStats(prevStats => [
-          prevStats[0], // Keep development progress
-          {
-            label: "Waitlist Signups",
-            value: "Join Now",
-            icon: FiUsers,
-            description: "Be among the first to try"
-          },
-          prevStats[2] // Keep target launch
-        ]);
-      }
-    };
-
-    fetchWaitlistCount();
-    // Refresh waitlist count every minute
-    const interval = setInterval(fetchWaitlistCount, 60000);
     return () => clearInterval(interval);
   }, []);
 

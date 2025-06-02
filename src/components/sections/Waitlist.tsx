@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FiMail, FiCheckCircle, FiUser, FiPhone, FiMessageSquare, FiUsers, FiTrendingUp, FiHeart } from "react-icons/fi";
 import { motion } from "framer-motion";
 import ScrollAnimation from "../ui/ScrollAnimation";
+import { useWaitlistCount } from '@/hooks/useWaitlistCount';
 
 console.log("useState:", typeof useState);
 console.log("FiMail:", typeof FiMail);
@@ -36,44 +37,7 @@ const reasons = [
 export default function Waitlist() {
   const [status, setStatus] = useState<FormStatus>('idle'); // Combined status state
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // Keep error message separate
-  const [signupCount, setSignupCount] = useState<number | null>(null);
-  const [countError, setCountError] = useState<string | null>(null);
-
-  // Fetch signup count
-  useEffect(() => {
-    const fetchCount = async () => {
-      try {
-        setCountError(null);
-        console.log('Fetching waitlist count...');
-        const response = await fetch('/api/waitlist/count');
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to fetch count');
-        }
-        const data = await response.json();
-        console.log('Waitlist count response:', data);
-        
-        if (data.count !== undefined) {
-          console.log('Setting count to:', data.count);
-          setSignupCount(data.count);
-        } else {
-          throw new Error('Count is undefined in response');
-        }
-      } catch (error) {
-        console.error('Error fetching signup count:', error);
-        setCountError(error instanceof Error ? error.message : 'Failed to fetch count');
-        setSignupCount(null);
-      }
-    };
-
-    fetchCount();
-    // Refresh count every minute
-    const interval = setInterval(fetchCount, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Add a debug log for render
-  console.log('Current signup count:', signupCount);
+  const { count: signupCount, error: countError } = useWaitlistCount();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -126,13 +90,6 @@ export default function Waitlist() {
           console.error('Form element is null, cannot reset.');
         }
         setStatus('success'); // Set status to success
-        
-        // Refresh the count after successful submission
-        const countResponse = await fetch('/api/waitlist/count');
-        if (countResponse.ok) {
-          const countData = await countResponse.json();
-          setSignupCount(countData.count);
-        }
       } else {
         console.error('Form submission failed:', {
           status: response.status,

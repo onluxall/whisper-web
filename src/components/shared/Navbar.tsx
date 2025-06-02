@@ -5,6 +5,7 @@ import { FiSun, FiMoon, FiMenu, FiX, FiUsers, FiMonitor } from "react-icons/fi";
 import { useTheme } from "../providers/ThemeProvider";
 import { useState, useEffect } from "react";
 import MobileMenu from "./MobileMenu";
+import { useWaitlistCount } from '@/hooks/useWaitlistCount';
 
 const navLinks = [
   { label: "Home", href: "#" },
@@ -16,29 +17,9 @@ const navLinks = [
 export default function Navbar() {
   const { theme, setTheme, toggleTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [signupCount, setSignupCount] = useState<number | null>(null);
+  const { count: signupCount } = useWaitlistCount();
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-
-  // Fetch signup count
-  useEffect(() => {
-    const fetchCount = async () => {
-      try {
-        const response = await fetch('/api/waitlist/count');
-        const data = await response.json();
-        if (data.count !== undefined) {
-          setSignupCount(data.count);
-        }
-      } catch (error) {
-        console.error('Error fetching signup count:', error);
-      }
-    };
-
-    fetchCount();
-    // Refresh count every minute
-    const interval = setInterval(fetchCount, 60000);
-    return () => clearInterval(interval);
-  }, []);
 
   // Add click outside handler for theme menu
   useEffect(() => {

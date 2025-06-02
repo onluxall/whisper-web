@@ -1,47 +1,72 @@
 import { NextResponse } from 'next/server';
+import { google } from 'googleapis';
+
+// Your Google Sheets credentials and configuration
+const SPREADSHEET_ID = process.env.google_sheet_id;
+const WAITLIST_SHEET_RANGE = 'Waitlist!A:A';
 
 export async function GET() {
   try {
-    // Use hardcoded webhook secret
-    const webhookSecret = '0762580a4f98e57116fa4718745b102cbabef89c5e1d51677e89e8bc6439b9ca';
+    console.log('API: Starting waitlist count request');
     
-    // Get the base URL from environment variables
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-    if (!baseUrl) {
-      console.error('API: Missing base URL');
+    // Debug environment variables (without exposing sensitive data)
+    console.log('API: Environment check:', {
+      hasClientEmail: !!process.env.google_client_email,
+      hasPrivateKey: !!process.env.google_private_key,
+      hasSheetId: !!process.env.google_sheet_id,
+      clientEmailLength: process.env.google_client_email?.length,
+      privateKeyLength: process.env.google_private_key?.length,
+      sheetIdLength: process.env.google_sheet_id?.length,
+    });
+    
+    // Validate environment variables
+    if (!process.env.google_client_email || !process.env.google_private_key || !process.env.google_sheet_id) {
+      console.error('API: Missing required environment variables');
       return NextResponse.json(
         { error: 'Server configuration error' },
         { status: 500 }
       );
     }
 
-    // Ensure baseUrl ends with a slash
-    const normalizedBaseUrl = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
-    
-    // Construct the webhook URL properly
-    const webhookUrl = `${normalizedBaseUrl}api/waitlist/webhook?secret=${webhookSecret}`;
+    console.log('API: Environment variables validated');
 
-    console.log('API: Fetching count from webhook:', webhookUrl);
+    // Create credentials object
+    const credentials = {
+      client_email: process.env.google_client_email,
+      private_key: process.env.google_private_key,
+    };
 
-    // Make authenticated request to the webhook endpoint
-    const response = await fetch(webhookUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    // Create a JWT client using the service account credentials
+    const auth = new google.auth.GoogleAuth({
+      credentials,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('API: Webhook request failed:', errorData);
-      throw new Error(errorData.error || 'Failed to fetch waitlist count');
-    }
+    console.log('API: Created auth client');
 
-    const data = await response.json();
-    console.log('API: Webhook response:', data);
-    return NextResponse.json(data);
+    // Initialize sheets with the auth client
+    const sheets = google.sheets('v4');
+    sheets.context._options = { ...sheets.context._options, auth };
+
+    // Get all values from the Waitlist sheet (only column A)
+    console.log('API: Fetching sheet data...');
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: WAITLIST_SHEET_RANGE,
+    });
+
+    console.log('API: Sheet data received:', {
+      hasValues: !!response.data.values,
+      rowCount: response.data.values?.length || 0
+    });
+
+    // The first row is headers, so we subtract 1 from the length to get the count
+    const count = (response.data.values?.length || 1) - 1;
+    console.log('API: Calculated count:', count);
+
+    return NextResponse.json({ count });
   } catch (error) {
-    console.error('API: Error proxying waitlist count:', error);
+    console.error('API: Error getting waitlist count:', error);
     return NextResponse.json(
       { 
         error: 'Failed to get waitlist count',
